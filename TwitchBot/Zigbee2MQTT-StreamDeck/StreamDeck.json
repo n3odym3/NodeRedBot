@@ -1,0 +1,312 @@
+[
+    {
+        "id": "5bcb6160.d6c0a",
+        "type": "function",
+        "z": "b03f730f.a21d3",
+        "g": "a6b2f7f5.8b4398",
+        "name": "Scenes (1234)",
+        "func": "const cmd = msg.payload;\nmsg.payload = {\n    \"request-type\": \"SetCurrentScene\",\n    \"scene-name\": \"Talk Chat\",\n    \"message-id\": msg._msgid\n};\n\nswitch(cmd.action) {\n  case \"scene_1\":\n    msg.payload[\"scene-name\"]= \"Talk Chat\";\n    return msg;\n  case \"scene_2\":\n    msg.payload[\"scene-name\"]= \"Capture Ecran\";\n    return msg;\n  case \"scene_3\":\n    msg.payload[\"scene-name\"]= \"Desk Elec\";\n    return msg;\n  case \"scene_4\":\n    msg.payload[\"scene-name\"]= \"Full Screen\";\n    return msg;\n}\n\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 380,
+        "y": 70,
+        "wires": [
+            [
+                "b70c038b.1b9c1"
+            ]
+        ]
+    },
+    {
+        "id": "b22c369e.f99108",
+        "type": "mqtt in",
+        "z": "b03f730f.a21d3",
+        "g": "a6b2f7f5.8b4398",
+        "name": "Lexman1",
+        "topic": "zigbee2mqtt/FriendlyName",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "bb09b041.d6734",
+        "x": 110,
+        "y": 170,
+        "wires": [
+            [
+                "7177b531.afb46c",
+                "5bcb6160.d6c0a"
+            ]
+        ]
+    },
+    {
+        "id": "7177b531.afb46c",
+        "type": "switch",
+        "z": "b03f730f.a21d3",
+        "g": "a6b2f7f5.8b4398",
+        "name": "",
+        "property": "payload.action",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "color_saturation_step_up",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "color_hue_step_up",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "color_hue_step_down",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "color_saturation_step_down",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "brightness_step_up",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "brightness_step_down",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 6,
+        "x": 260,
+        "y": 170,
+        "wires": [
+            [
+                "21047ae2.927ff6"
+            ],
+            [
+                "312db81.8f60548"
+            ],
+            [
+                "1a8bf5ce.894f0a"
+            ],
+            [
+                "4b5665ff.46793c"
+            ],
+            [
+                "493d8ae6.1af274"
+            ],
+            [
+                "92092df4.cfcac"
+            ]
+        ]
+    },
+    {
+        "id": "312db81.8f60548",
+        "type": "function",
+        "z": "b03f730f.a21d3",
+        "g": "a6b2f7f5.8b4398",
+        "name": "Lumix",
+        "func": "msg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"Lexar\"},\n    \"scene-name\": \"Full Screen\",\n    \"visible\": false,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\nmsg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"Canon\"},\n    \"scene-name\": \"Full Screen\",\n    \"visible\": false,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\nmsg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"Lumix\"},\n    \"scene-name\": \"Full Screen\",\n    \"visible\": true,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\nmsg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"Grand angle\"},\n    \"scene-name\": \"Full Screen\",\n    \"visible\": false,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 410,
+        "y": 150,
+        "wires": [
+            [
+                "b70c038b.1b9c1"
+            ]
+        ]
+    },
+    {
+        "id": "b70c038b.1b9c1",
+        "type": "websocket out",
+        "z": "b03f730f.a21d3",
+        "g": "a6b2f7f5.8b4398",
+        "name": "PC Stream",
+        "server": "11f35e5.c7bf3a2",
+        "client": "",
+        "x": 590,
+        "y": 170,
+        "wires": []
+    },
+    {
+        "id": "4b5665ff.46793c",
+        "type": "function",
+        "z": "b03f730f.a21d3",
+        "g": "a6b2f7f5.8b4398",
+        "name": "Octopi",
+        "func": "msg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"Lexar\"},\n    \"scene-name\": \"Full Screen\",\n    \"visible\": false,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\nmsg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"Canon\"},\n    \"scene-name\": \"Full Screen\",\n    \"visible\": false,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\nmsg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"Lumix\"},\n    \"scene-name\": \"Full Screen\",\n    \"visible\": false,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\nmsg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"Grand angle\"},\n    \"scene-name\": \"Full Screen\",\n    \"visible\": true,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 410,
+        "y": 230,
+        "wires": [
+            [
+                "b70c038b.1b9c1"
+            ]
+        ]
+    },
+    {
+        "id": "1a8bf5ce.894f0a",
+        "type": "function",
+        "z": "b03f730f.a21d3",
+        "g": "a6b2f7f5.8b4398",
+        "name": "Lexar",
+        "func": "msg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"Lexar\"},\n    \"scene-name\": \"Full Screen\",\n    \"visible\": true,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\nmsg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"Canon\"},\n    \"scene-name\": \"Full Screen\",\n    \"visible\": false,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\nmsg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"Lumix\"},\n    \"scene-name\": \"Full Screen\",\n    \"visible\": false,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\nmsg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"Grand angle\"},\n    \"scene-name\": \"Full Screen\",\n    \"visible\": false,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 410,
+        "y": 190,
+        "wires": [
+            [
+                "b70c038b.1b9c1"
+            ]
+        ]
+    },
+    {
+        "id": "21047ae2.927ff6",
+        "type": "function",
+        "z": "b03f730f.a21d3",
+        "g": "a6b2f7f5.8b4398",
+        "name": "Canon",
+        "func": "msg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"Lexar\"},\n    \"scene-name\": \"Full Screen\",\n    \"visible\": false,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\nmsg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"Canon\"},\n    \"scene-name\": \"Full Screen\",\n    \"visible\": true,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\nmsg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"Lumix\"},\n    \"scene-name\": \"Full Screen\",\n    \"visible\": false,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\nmsg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"Grand angle\"},\n    \"scene-name\": \"Full Screen\",\n    \"visible\": false,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 410,
+        "y": 110,
+        "wires": [
+            [
+                "b70c038b.1b9c1"
+            ]
+        ]
+    },
+    {
+        "id": "493d8ae6.1af274",
+        "type": "function",
+        "z": "b03f730f.a21d3",
+        "g": "a6b2f7f5.8b4398",
+        "name": "PC",
+        "func": "msg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"PC\"},\n    \"scene-name\": \"Capture Ecran\",\n    \"visible\": true,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\nmsg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"Tab\"},\n    \"scene-name\": \"Capture Ecran\",\n    \"visible\": false,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 410,
+        "y": 270,
+        "wires": [
+            [
+                "b70c038b.1b9c1"
+            ]
+        ]
+    },
+    {
+        "id": "92092df4.cfcac",
+        "type": "function",
+        "z": "b03f730f.a21d3",
+        "g": "a6b2f7f5.8b4398",
+        "name": "Tab",
+        "func": "msg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"PC\"},\n    \"scene-name\": \"Capture Ecran\",\n    \"visible\": false,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\nmsg.payload = {\n    \"request-type\": \"SetSceneItemProperties\",\n    \"item\":{\"name\":\"Tab\"},\n    \"scene-name\": \"Capture Ecran\",\n    \"visible\": true,\n    \"message-id\": msg._msgid\n};\nnode.send(msg);\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 410,
+        "y": 310,
+        "wires": [
+            [
+                "b70c038b.1b9c1"
+            ]
+        ]
+    },
+    {
+        "id": "a1db867d.31cf38",
+        "type": "debug",
+        "z": "b03f730f.a21d3",
+        "g": "a6b2f7f5.8b4398",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "103fa232.cd042e",
+        "type": "function",
+        "z": "b03f730f.a21d3",
+        "g": "a6b2f7f5.8b4398",
+        "name": "Parse payload",
+        "func": "msg.payload = JSON.parse(msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 280,
+        "y": 360,
+        "wires": [
+            [
+                "a1db867d.31cf38"
+            ]
+        ]
+    },
+    {
+        "id": "edfb12b8.50e0f",
+        "type": "websocket in",
+        "z": "b03f730f.a21d3",
+        "g": "a6b2f7f5.8b4398",
+        "name": "PC Stream",
+        "server": "11f35e5.c7bf3a2",
+        "client": "",
+        "x": 110,
+        "y": 360,
+        "wires": [
+            [
+                "103fa232.cd042e"
+            ]
+        ]
+    },
+    {
+        "id": "bb09b041.d6734",
+        "type": "mqtt-broker",
+        "name": "Local",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": false,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "11f35e5.c7bf3a2",
+        "type": "websocket-listener",
+        "path": "ws://192.168.178.20:4444",
+        "wholemsg": "false"
+    }
+]
