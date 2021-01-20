@@ -1,0 +1,386 @@
+[
+    {
+        "id": "947d8466.2ebb78",
+        "type": "group",
+        "z": "d46de0e5.d6646",
+        "name": "Bits",
+        "style": {
+            "stroke": "#000000",
+            "fill": "#92d04f",
+            "fill-opacity": "0.5",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "321f6328.f20c4c",
+            "6910d42.e0e152c",
+            "6a4572be.2bc7ac",
+            "c878bb49.916cc8",
+            "52b88de1.b771e4",
+            "8b240ac8.4aded8"
+        ],
+        "x": 44,
+        "y": 209,
+        "w": 982,
+        "h": 82
+    },
+    {
+        "id": "321f6328.f20c4c",
+        "type": "tmi-event-cheer",
+        "z": "d46de0e5.d6646",
+        "g": "947d8466.2ebb78",
+        "config": "",
+        "name": "",
+        "x": 120,
+        "y": 250,
+        "wires": [
+            [
+                "6910d42.e0e152c"
+            ]
+        ]
+    },
+    {
+        "id": "6910d42.e0e152c",
+        "type": "function",
+        "z": "d46de0e5.d6646",
+        "g": "947d8466.2ebb78",
+        "name": "Division Bits",
+        "func": "msg.payload = Math.ceil(parseInt(msg.payload.userstate.bits)/10); \nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 260,
+        "y": 250,
+        "wires": [
+            [
+                "52b88de1.b771e4"
+            ]
+        ]
+    },
+    {
+        "id": "6a4572be.2bc7ac",
+        "type": "mqtt out",
+        "z": "d46de0e5.d6646",
+        "g": "947d8466.2ebb78",
+        "name": "Kallax",
+        "topic": "domotique/kallax/wled/api",
+        "qos": "",
+        "retain": "",
+        "broker": "bb09b041.d6734",
+        "x": 950,
+        "y": 250,
+        "wires": []
+    },
+    {
+        "id": "c878bb49.916cc8",
+        "type": "delay",
+        "z": "d46de0e5.d6646",
+        "g": "947d8466.2ebb78",
+        "name": "",
+        "pauseType": "delayv",
+        "timeout": "10",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 620,
+        "y": 250,
+        "wires": [
+            [
+                "8b240ac8.4aded8"
+            ]
+        ]
+    },
+    {
+        "id": "52b88de1.b771e4",
+        "type": "function",
+        "z": "d46de0e5.d6646",
+        "g": "947d8466.2ebb78",
+        "name": "Multiplication msg",
+        "func": "const delay = 500;\nmsg.delay = 0;\n\nfor(i=0;i<msg.payload;i++){\n    node.send(msg);\n    msg.delay += delay;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 440,
+        "y": 250,
+        "wires": [
+            [
+                "c878bb49.916cc8"
+            ]
+        ]
+    },
+    {
+        "id": "8b240ac8.4aded8",
+        "type": "function",
+        "z": "d46de0e5.d6646",
+        "g": "947d8466.2ebb78",
+        "name": "Random Color",
+        "func": "\n\nfunction randomInteger(min, max) {\n   return Math.floor(Math.random() * (max - min) + min);\n}\n\nfunction HSVtoRGB(h, s, v) {\n    var r, g, b, i, f, p, q, t;\n    if (arguments.length === 1) {\n        s = h.s, v = h.v, h = h.h;\n    }\n    i = Math.floor(h * 6);\n    f = h * 6 - i;\n    p = v * (1 - s);\n    q = v * (1 - f * s);\n    t = v * (1 - (1 - f) * s);\n    switch (i % 6) {\n        case 0: r = v, g = t, b = p; break;\n        case 1: r = q, g = v, b = p; break;\n        case 2: r = p, g = v, b = t; break;\n        case 3: r = p, g = q, b = v; break;\n        case 4: r = t, g = p, b = v; break;\n        case 5: r = v, g = p, b = q; break;\n    }\n    return {\n        r: Math.round(r * 255),\n        g: Math.round(g * 255),\n        b: Math.round(b * 255)\n    };\n}\n\nfunction rgbToHex(r, g, b) {\n  return \"#\" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);\n}\n\nRGB = HSVtoRGB(randomInteger(0,100)/100,1,1);\n\nmsg.payload = {\n    \"seg\":{\n        \"id\":0,\"col\":[[RGB.r,RGB.g,RGB.b,0]]\n    }\n}\n\nmsg.payload = {\n    \"seg\":[\n        {\"col\":[[RGB.r,RGB.g,RGB.b,0]]},\n        {\"col\":[[RGB.r,RGB.g,RGB.b,0]]},\n        {\"col\":[[RGB.r,RGB.g,RGB.b,0]]},\n        {\"col\":[[RGB.r,RGB.g,RGB.b,0]]}\n        ],\n    \"transition\":0\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 790,
+        "y": 250,
+        "wires": [
+            [
+                "6a4572be.2bc7ac"
+            ]
+        ]
+    },
+    {
+        "id": "bb09b041.d6734",
+        "type": "mqtt-broker",
+        "name": "Local",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": false,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "f236866.39cc378",
+        "type": "group",
+        "z": "d46de0e5.d6646",
+        "name": "Commandes ! ",
+        "style": {
+            "stroke": "#000000",
+            "fill": "#b797cf",
+            "fill-opacity": "0.4",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "8bd934d4.df43f8",
+            "943f51c3.16b2b",
+            "7c25f360.0cf2cc",
+            "f8590187.4cf74",
+            "c338428e.c6ac6",
+            "81002cd7.22824",
+            "11cba129.2749df",
+            "3010317a.be1b6e",
+            "dc4a4bf6.ae2848",
+            "8b125d1f.fb691"
+        ],
+        "x": 44,
+        "y": 19,
+        "w": 1002,
+        "h": 172
+    },
+    {
+        "id": "8bd934d4.df43f8",
+        "type": "tmi-event-message",
+        "z": "d46de0e5.d6646",
+        "g": "f236866.39cc378",
+        "config": "",
+        "name": "Chat ",
+        "channels_filter": "",
+        "users_filter": "",
+        "action": false,
+        "chat": true,
+        "whisper": false,
+        "regular": true,
+        "mod": true,
+        "subscriber": true,
+        "broadcaster": true,
+        "message_regexp": "!",
+        "message_flags": "",
+        "x": 120,
+        "y": 130,
+        "wires": [
+            [
+                "7c25f360.0cf2cc"
+            ]
+        ]
+    },
+    {
+        "id": "943f51c3.16b2b",
+        "type": "tmi-command-action",
+        "z": "d46de0e5.d6646",
+        "g": "f236866.39cc378",
+        "config": "",
+        "name": "",
+        "x": 810,
+        "y": 60,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "7c25f360.0cf2cc",
+        "type": "function",
+        "z": "d46de0e5.d6646",
+        "g": "f236866.39cc378",
+        "name": "Split CMD + Set Channel",
+        "func": "msg.payload.cmd = msg.payload.message.toLowerCase().split(\" \");\nmsg.payload.username = msg.payload.userstate.username;\nmsg.payload.channel = \"channel\"\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 310,
+        "y": 130,
+        "wires": [
+            [
+                "c338428e.c6ac6"
+            ]
+        ]
+    },
+    {
+        "id": "f8590187.4cf74",
+        "type": "function",
+        "z": "d46de0e5.d6646",
+        "g": "f236866.39cc378",
+        "name": "LED",
+        "func": "const input = msg.payload.cmd;\nlet colors = {\n  \"aliceblue\": [240, 248, 255, 1],\n  \"antiquewhite\": [250, 235, 215, 1],\n  \"aqua\": [0, 255, 255, 1],\n  \"aquamarine\": [127, 255, 212, 1],\n  \"azure\": [240, 255, 255, 1],\n  \"beige\": [245, 245, 220, 1],\n  \"bisque\": [255, 228, 196, 1],\n  \"black\": [0, 0, 0, 1],\n  \"blanchedalmond\": [255, 235, 205, 1],\n  \"blue\": [0, 0, 255, 1],\n  \"blueviolet\": [138, 43, 226, 1],\n  \"brown\": [165, 42, 42, 1],\n  \"burlywood\": [222, 184, 135, 1],\n  \"cadetblue\": [95, 158, 160, 1],\n  \"chartreuse\": [127, 255, 0, 1],\n  \"chocolate\": [210, 105, 30, 1],\n  \"coral\": [255, 127, 80, 1],\n  \"cornflowerblue\": [100, 149, 237, 1],\n  \"cornsilk\": [255, 248, 220, 1],\n  \"crimson\": [220, 20, 60, 1],\n  \"cyan\": [0, 255, 255, 1],\n  \"darkblue\": [0, 0, 139, 1],\n  \"darkcyan\": [0, 139, 139, 1],\n  \"darkgoldenrod\": [184, 134, 11, 1],\n  \"darkgray\": [169, 169, 169, 1],\n  \"darkgreen\": [0, 100, 0, 1],\n  \"darkgrey\": [169, 169, 169, 1],\n  \"darkkhaki\": [189, 183, 107, 1],\n  \"darkmagenta\": [139, 0, 139, 1],\n  \"darkolivegreen\": [85, 107, 47, 1],\n  \"darkorange\": [255, 140, 0, 1],\n  \"darkorchid\": [153, 50, 204, 1],\n  \"darkred\": [139, 0, 0, 1],\n  \"darksalmon\": [233, 150, 122, 1],\n  \"darkseagreen\": [143, 188, 143, 1],\n  \"darkslateblue\": [72, 61, 139, 1],\n  \"darkslategray\": [47, 79, 79, 1],\n  \"darkslategrey\": [47, 79, 79, 1],\n  \"darkturquoise\": [0, 206, 209, 1],\n  \"darkviolet\": [148, 0, 211, 1],\n  \"deeppink\": [255, 20, 147, 1],\n  \"deepskyblue\": [0, 191, 255, 1],\n  \"dimgray\": [105, 105, 105, 1],\n  \"dimgrey\": [105, 105, 105, 1],\n  \"dodgerblue\": [30, 144, 255, 1],\n  \"firebrick\": [178, 34, 34, 1],\n  \"floralwhite\": [255, 250, 240, 1],\n  \"forestgreen\": [34, 139, 34, 1],\n  \"fuchsia\": [255, 0, 255, 1],\n  \"gainsboro\": [220, 220, 220, 1],\n  \"ghostwhite\": [248, 248, 255, 1],\n  \"gold\": [255, 215, 0, 1],\n  \"goldenrod\": [218, 165, 32, 1],\n  \"gray\": [128, 128, 128, 1],\n  \"green\": [0, 255, 0, 1],\n  \"greenyellow\": [173, 255, 47, 1],\n  \"grey\": [128, 128, 128, 1],\n  \"honeydew\": [240, 255, 240, 1],\n  \"hotpink\": [255, 105, 180, 1],\n  \"indianred\": [205, 92, 92, 1],\n  \"indigo\": [75, 0, 130, 1],\n  \"ivory\": [255, 255, 240, 1],\n  \"khaki\": [240, 230, 140, 1],\n  \"lavender\": [230, 230, 250, 1],\n  \"lavenderblush\": [255, 240, 245, 1],\n  \"lawngreen\": [124, 252, 0, 1],\n  \"lemonchiffon\": [255, 250, 205, 1],\n  \"lightblue\": [173, 216, 230, 1],\n  \"lightcoral\": [240, 128, 128, 1],\n  \"lightcyan\": [224, 255, 255, 1],\n  \"lightgoldenrodyellow\": [250, 250, 210, 1],\n  \"lightgray\": [211, 211, 211, 1],\n  \"lightgreen\": [144, 238, 144, 1],\n  \"lightgrey\": [211, 211, 211, 1],\n  \"lightpink\": [255, 182, 193, 1],\n  \"lightsalmon\": [255, 160, 122, 1],\n  \"lightseagreen\": [32, 178, 170, 1],\n  \"lightskyblue\": [135, 206, 250, 1],\n  \"lightslategray\": [119, 136, 153, 1],\n  \"lightslategrey\": [119, 136, 153, 1],\n  \"lightsteelblue\": [176, 196, 222, 1],\n  \"lightyellow\": [255, 255, 224, 1],\n  \"lime\": [0, 255, 0, 1],\n  \"limegreen\": [50, 205, 50, 1],\n  \"linen\": [250, 240, 230, 1],\n  \"magenta\": [255, 0, 255, 1],\n  \"maroon\": [128, 0, 0, 1],\n  \"mediumaquamarine\": [102, 205, 170, 1],\n  \"mediumblue\": [0, 0, 205, 1],\n  \"mediumorchid\": [186, 85, 211, 1],\n  \"mediumpurple\": [147, 112, 219, 1],\n  \"mediumseagreen\": [60, 179, 113, 1],\n  \"mediumslateblue\": [123, 104, 238, 1],\n  \"mediumspringgreen\": [0, 250, 154, 1],\n  \"mediumturquoise\": [72, 209, 204, 1],\n  \"mediumvioletred\": [199, 21, 133, 1],\n  \"midnightblue\": [25, 25, 112, 1],\n  \"mintcream\": [245, 255, 250, 1],\n  \"mistyrose\": [255, 228, 225, 1],\n  \"moccasin\": [255, 228, 181, 1],\n  \"navajowhite\": [255, 222, 173, 1],\n  \"navy\": [0, 0, 128, 1],\n  \"oldlace\": [253, 245, 230, 1],\n  \"olive\": [128, 128, 0, 1],\n  \"olivedrab\": [107, 142, 35, 1],\n  \"orange\": [255, 165, 0, 1],\n  \"orangered\": [255, 69, 0, 1],\n  \"orchid\": [218, 112, 214, 1],\n  \"palegoldenrod\": [238, 232, 170, 1],\n  \"palegreen\": [152, 251, 152, 1],\n  \"paleturquoise\": [175, 238, 238, 1],\n  \"palevioletred\": [219, 112, 147, 1],\n  \"papayawhip\": [255, 239, 213, 1],\n  \"peachpuff\": [255, 218, 185, 1],\n  \"peru\": [205, 133, 63, 1],\n  \"pink\": [255, 192, 203, 1],\n  \"plum\": [221, 160, 221, 1],\n  \"powderblue\": [176, 224, 230, 1],\n  \"purple\": [128, 0, 128, 1],\n  \"red\": [255, 0, 0, 1],\n  \"rosybrown\": [188, 143, 143, 1],\n  \"royalblue\": [65, 105, 225, 1],\n  \"saddlebrown\": [139, 69, 19, 1],\n  \"salmon\": [250, 128, 114, 1],\n  \"sandybrown\": [244, 164, 96, 1],\n  \"seagreen\": [46, 139, 87, 1],\n  \"seashell\": [255, 245, 238, 1],\n  \"sienna\": [160, 82, 45, 1],\n  \"silver\": [192, 192, 192, 1],\n  \"skyblue\": [135, 206, 235, 1],\n  \"slateblue\": [106, 90, 205, 1],\n  \"slategray\": [112, 128, 144, 1],\n  \"slategrey\": [112, 128, 144, 1],\n  \"snow\": [255, 250, 250, 1],\n  \"springgreen\": [0, 255, 127, 1],\n  \"steelblue\": [70, 130, 180, 1],\n  \"tan\": [210, 180, 140, 1],\n  \"teal\": [0, 128, 128, 1],\n  \"thistle\": [216, 191, 216, 1],\n  \"tomato\": [255, 99, 71, 1],\n  \"transparent\": [0, 0, 0, 0],\n  \"turquoise\": [64, 224, 208, 1],\n  \"violet\": [238, 130, 238, 1],\n  \"wheat\": [245, 222, 179, 1],\n  \"white\": [255, 255, 255, 1],\n  \"whitesmoke\": [245, 245, 245, 1],\n  \"yellow\": [255, 255, 0, 1],\n  \"yellowgreen\": [154, 205, 50, 1],\n  \"rebeccapurple\": [102, 51, 153, 1]\n}\n\nfunction hexToRGB(h) {\n  let out = {\"r\":0,\"g\":0,\"b\":0};\n  // 3 digits\n  if (h.length == 4) {\n    out.r = parseInt(\"0x\" + h[1] + h[1]);\n    out.g = parseInt(\"0x\" + h[2] + h[2]);\n    out.b = parseInt(\"0x\" + h[3] + h[3]);\n  // 6 digits\n  } else if (h.length == 7) {\n    out.r = parseInt(\"0x\" + h[1] + h[2]);\n    out.g = parseInt(\"0x\" + h[3] + h[4]);\n    out.b = parseInt(\"0x\" + h[5] + h[6]);\n  }\n  return out;\n}\n\nfunction HSVtoRGB(h, s, v) {\n    var r, g, b, i, f, p, q, t;\n    if (arguments.length === 1) {\n        s = h.s, v = h.v, h = h.h;\n    }\n    i = Math.floor(h * 6);\n    f = h * 6 - i;\n    p = v * (1 - s);\n    q = v * (1 - f * s);\n    t = v * (1 - (1 - f) * s);\n    switch (i % 6) {\n        case 0: r = v, g = t, b = p; break;\n        case 1: r = q, g = v, b = p; break;\n        case 2: r = p, g = v, b = t; break;\n        case 3: r = p, g = q, b = v; break;\n        case 4: r = t, g = p, b = v; break;\n        case 5: r = v, g = p, b = q; break;\n    }\n    return {\n        r: Math.round(r * 255),\n        g: Math.round(g * 255),\n        b: Math.round(b * 255)\n    };\n}\n\nfunction randomInteger(min, max) {\n   return Math.floor(Math.random() * (max - min) + min);\n}\n\n\nif(input.length < 3 || (input.length > 3 && input.length<5)){\n    msg.payload.message = \"Commande incomplète rajoutez le slot et la valeur RGB Ex : !led 1 red ou !led 1 #FF0000 ou !led 1 255 0 0\";\n    return msg\n} \n    \nif (input.length === 3){\n    let rgb={\"r\":0,\"g\":0,\"b\":0};\n    \n    if(input[2][0]===\"#\"){\n        rgb = hexToRGB(input[2]);\n    }\n    \n    else if(input[2]===\"random\"){\n        rgb = HSVtoRGB(randomInteger(0,100)/100,1,1);\n    }\n    else{\n        rgb.r = colors[input[2]][0];\n        rgb.g = colors[input[2]][1];\n        rgb.b = colors[input[2]][2];\n    }\n    \n    msg.payload = {\"seg\":{\"id\":parseInt(input[1]),\"col\":[[rgb.r,rgb.g,rgb.b,0]]}};\n    return msg;\n}\n    \nelse{\n    msg.payload = {\"seg\":{\"id\":parseInt(input[1]),\"col\":[[input[2],input[3],input[4],0]]}};\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 670,
+        "y": 100,
+        "wires": [
+            [
+                "943f51c3.16b2b",
+                "8b125d1f.fb691"
+            ]
+        ]
+    },
+    {
+        "id": "c338428e.c6ac6",
+        "type": "switch",
+        "z": "d46de0e5.d6646",
+        "g": "f236866.39cc378",
+        "name": "Switch cmd",
+        "property": "payload.cmd[0]",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "!led",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "!cadre",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 510,
+        "y": 130,
+        "wires": [
+            [
+                "f8590187.4cf74"
+            ],
+            [
+                "11cba129.2749df"
+            ]
+        ]
+    },
+    {
+        "id": "81002cd7.22824",
+        "type": "mqtt out",
+        "z": "d46de0e5.d6646",
+        "g": "f236866.39cc378",
+        "name": "Kallax",
+        "topic": "domotique/kallax/wled/api",
+        "qos": "",
+        "retain": "",
+        "broker": "bb09b041.d6734",
+        "x": 970,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "11cba129.2749df",
+        "type": "function",
+        "z": "d46de0e5.d6646",
+        "g": "f236866.39cc378",
+        "name": "Cadre",
+        "func": "const input = msg.payload.cmd;\n\nlet colors = {\n  \"aliceblue\": [240, 248, 255, 1],\n  \"antiquewhite\": [250, 235, 215, 1],\n  \"aqua\": [0, 255, 255, 1],\n  \"aquamarine\": [127, 255, 212, 1],\n  \"azure\": [240, 255, 255, 1],\n  \"beige\": [245, 245, 220, 1],\n  \"bisque\": [255, 228, 196, 1],\n  \"black\": [0, 0, 0, 1],\n  \"blanchedalmond\": [255, 235, 205, 1],\n  \"blue\": [0, 0, 255, 1],\n  \"blueviolet\": [138, 43, 226, 1],\n  \"brown\": [165, 42, 42, 1],\n  \"burlywood\": [222, 184, 135, 1],\n  \"cadetblue\": [95, 158, 160, 1],\n  \"chartreuse\": [127, 255, 0, 1],\n  \"chocolate\": [210, 105, 30, 1],\n  \"coral\": [255, 127, 80, 1],\n  \"cornflowerblue\": [100, 149, 237, 1],\n  \"cornsilk\": [255, 248, 220, 1],\n  \"crimson\": [220, 20, 60, 1],\n  \"cyan\": [0, 255, 255, 1],\n  \"darkblue\": [0, 0, 139, 1],\n  \"darkcyan\": [0, 139, 139, 1],\n  \"darkgoldenrod\": [184, 134, 11, 1],\n  \"darkgray\": [169, 169, 169, 1],\n  \"darkgreen\": [0, 100, 0, 1],\n  \"darkgrey\": [169, 169, 169, 1],\n  \"darkkhaki\": [189, 183, 107, 1],\n  \"darkmagenta\": [139, 0, 139, 1],\n  \"darkolivegreen\": [85, 107, 47, 1],\n  \"darkorange\": [255, 140, 0, 1],\n  \"darkorchid\": [153, 50, 204, 1],\n  \"darkred\": [139, 0, 0, 1],\n  \"darksalmon\": [233, 150, 122, 1],\n  \"darkseagreen\": [143, 188, 143, 1],\n  \"darkslateblue\": [72, 61, 139, 1],\n  \"darkslategray\": [47, 79, 79, 1],\n  \"darkslategrey\": [47, 79, 79, 1],\n  \"darkturquoise\": [0, 206, 209, 1],\n  \"darkviolet\": [148, 0, 211, 1],\n  \"deeppink\": [255, 20, 147, 1],\n  \"deepskyblue\": [0, 191, 255, 1],\n  \"dimgray\": [105, 105, 105, 1],\n  \"dimgrey\": [105, 105, 105, 1],\n  \"dodgerblue\": [30, 144, 255, 1],\n  \"firebrick\": [178, 34, 34, 1],\n  \"floralwhite\": [255, 250, 240, 1],\n  \"forestgreen\": [34, 139, 34, 1],\n  \"fuchsia\": [255, 0, 255, 1],\n  \"gainsboro\": [220, 220, 220, 1],\n  \"ghostwhite\": [248, 248, 255, 1],\n  \"gold\": [255, 215, 0, 1],\n  \"goldenrod\": [218, 165, 32, 1],\n  \"gray\": [128, 128, 128, 1],\n  \"green\": [0, 255, 0, 1],\n  \"greenyellow\": [173, 255, 47, 1],\n  \"grey\": [128, 128, 128, 1],\n  \"honeydew\": [240, 255, 240, 1],\n  \"hotpink\": [255, 105, 180, 1],\n  \"indianred\": [205, 92, 92, 1],\n  \"indigo\": [75, 0, 130, 1],\n  \"ivory\": [255, 255, 240, 1],\n  \"khaki\": [240, 230, 140, 1],\n  \"lavender\": [230, 230, 250, 1],\n  \"lavenderblush\": [255, 240, 245, 1],\n  \"lawngreen\": [124, 252, 0, 1],\n  \"lemonchiffon\": [255, 250, 205, 1],\n  \"lightblue\": [173, 216, 230, 1],\n  \"lightcoral\": [240, 128, 128, 1],\n  \"lightcyan\": [224, 255, 255, 1],\n  \"lightgoldenrodyellow\": [250, 250, 210, 1],\n  \"lightgray\": [211, 211, 211, 1],\n  \"lightgreen\": [144, 238, 144, 1],\n  \"lightgrey\": [211, 211, 211, 1],\n  \"lightpink\": [255, 182, 193, 1],\n  \"lightsalmon\": [255, 160, 122, 1],\n  \"lightseagreen\": [32, 178, 170, 1],\n  \"lightskyblue\": [135, 206, 250, 1],\n  \"lightslategray\": [119, 136, 153, 1],\n  \"lightslategrey\": [119, 136, 153, 1],\n  \"lightsteelblue\": [176, 196, 222, 1],\n  \"lightyellow\": [255, 255, 224, 1],\n  \"lime\": [0, 255, 0, 1],\n  \"limegreen\": [50, 205, 50, 1],\n  \"linen\": [250, 240, 230, 1],\n  \"magenta\": [255, 0, 255, 1],\n  \"maroon\": [128, 0, 0, 1],\n  \"mediumaquamarine\": [102, 205, 170, 1],\n  \"mediumblue\": [0, 0, 205, 1],\n  \"mediumorchid\": [186, 85, 211, 1],\n  \"mediumpurple\": [147, 112, 219, 1],\n  \"mediumseagreen\": [60, 179, 113, 1],\n  \"mediumslateblue\": [123, 104, 238, 1],\n  \"mediumspringgreen\": [0, 250, 154, 1],\n  \"mediumturquoise\": [72, 209, 204, 1],\n  \"mediumvioletred\": [199, 21, 133, 1],\n  \"midnightblue\": [25, 25, 112, 1],\n  \"mintcream\": [245, 255, 250, 1],\n  \"mistyrose\": [255, 228, 225, 1],\n  \"moccasin\": [255, 228, 181, 1],\n  \"navajowhite\": [255, 222, 173, 1],\n  \"navy\": [0, 0, 128, 1],\n  \"oldlace\": [253, 245, 230, 1],\n  \"olive\": [128, 128, 0, 1],\n  \"olivedrab\": [107, 142, 35, 1],\n  \"orange\": [255, 165, 0, 1],\n  \"orangered\": [255, 69, 0, 1],\n  \"orchid\": [218, 112, 214, 1],\n  \"palegoldenrod\": [238, 232, 170, 1],\n  \"palegreen\": [152, 251, 152, 1],\n  \"paleturquoise\": [175, 238, 238, 1],\n  \"palevioletred\": [219, 112, 147, 1],\n  \"papayawhip\": [255, 239, 213, 1],\n  \"peachpuff\": [255, 218, 185, 1],\n  \"peru\": [205, 133, 63, 1],\n  \"pink\": [255, 192, 203, 1],\n  \"plum\": [221, 160, 221, 1],\n  \"powderblue\": [176, 224, 230, 1],\n  \"purple\": [128, 0, 128, 1],\n  \"red\": [255, 0, 0, 1],\n  \"rosybrown\": [188, 143, 143, 1],\n  \"royalblue\": [65, 105, 225, 1],\n  \"saddlebrown\": [139, 69, 19, 1],\n  \"salmon\": [250, 128, 114, 1],\n  \"sandybrown\": [244, 164, 96, 1],\n  \"seagreen\": [46, 139, 87, 1],\n  \"seashell\": [255, 245, 238, 1],\n  \"sienna\": [160, 82, 45, 1],\n  \"silver\": [192, 192, 192, 1],\n  \"skyblue\": [135, 206, 235, 1],\n  \"slateblue\": [106, 90, 205, 1],\n  \"slategray\": [112, 128, 144, 1],\n  \"slategrey\": [112, 128, 144, 1],\n  \"snow\": [255, 250, 250, 1],\n  \"springgreen\": [0, 255, 127, 1],\n  \"steelblue\": [70, 130, 180, 1],\n  \"tan\": [210, 180, 140, 1],\n  \"teal\": [0, 128, 128, 1],\n  \"thistle\": [216, 191, 216, 1],\n  \"tomato\": [255, 99, 71, 1],\n  \"transparent\": [0, 0, 0, 0],\n  \"turquoise\": [64, 224, 208, 1],\n  \"violet\": [238, 130, 238, 1],\n  \"wheat\": [245, 222, 179, 1],\n  \"white\": [255, 255, 255, 1],\n  \"whitesmoke\": [245, 245, 245, 1],\n  \"yellow\": [255, 255, 0, 1],\n  \"yellowgreen\": [154, 205, 50, 1],\n  \"rebeccapurple\": [102, 51, 153, 1]\n}\n\nfunction hexToRGB(h) {\n  let out = {\"r\":0,\"g\":0,\"b\":0};\n  // 3 digits\n  if (h.length == 4) {\n    out.r = parseInt(\"0x\" + h[1] + h[1]);\n    out.g = parseInt(\"0x\" + h[2] + h[2]);\n    out.b = parseInt(\"0x\" + h[3] + h[3]);\n  // 6 digits\n  } else if (h.length == 7) {\n    out.r = parseInt(\"0x\" + h[1] + h[2]);\n    out.g = parseInt(\"0x\" + h[3] + h[4]);\n    out.b = parseInt(\"0x\" + h[5] + h[6]);\n  }\n  return out;\n}\n\nfunction HSVtoRGB(h, s, v) {\n    var r, g, b, i, f, p, q, t;\n    if (arguments.length === 1) {\n        s = h.s, v = h.v, h = h.h;\n    }\n    i = Math.floor(h * 6);\n    f = h * 6 - i;\n    p = v * (1 - s);\n    q = v * (1 - f * s);\n    t = v * (1 - (1 - f) * s);\n    switch (i % 6) {\n        case 0: r = v, g = t, b = p; break;\n        case 1: r = q, g = v, b = p; break;\n        case 2: r = p, g = v, b = t; break;\n        case 3: r = p, g = q, b = v; break;\n        case 4: r = t, g = p, b = v; break;\n        case 5: r = v, g = p, b = q; break;\n    }\n    return {\n        r: Math.round(r * 255),\n        g: Math.round(g * 255),\n        b: Math.round(b * 255)\n    };\n}\n\nfunction randomInteger(min, max) {\n   return Math.floor(Math.random() * (max - min) + min);\n}\n\n\n\nif(input.length < 2 || (input.length > 2 && input.length<4)){\n    msg.payload.message = \"Commande incomplète rajoutez la couleur. Ex : !cadre red ou !cadre #FF0000 ou !led 255 0 0\";\n    return msg\n} \n    \nif (input.length === 2){\n    let rgb={\"r\":0,\"g\":0,\"b\":0};\n    \n    if(input[1][0]===\"#\"){\n        rgb = hexToRGB(input[1]);\n    }\n    \n    else if(input[1]===\"random\"){\n        rgb = HSVtoRGB(randomInteger(0,100)/100,1,1);\n    }\n    else{\n        rgb.r = colors[input[1]][0];\n        rgb.g = colors[input[1]][1];\n        rgb.b = colors[input[1]][2];\n    }\n    \n    msg.payload = {\n        \"R\": rgb.r,\n        \"G\": rgb.g,\n        \"B\": rgb.b\n    };\n    return msg;\n}\n    \nelse{\n    msg.payload = {\n        \"R\": parseInt(input[1]),\n        \"G\": parseInt(input[2]),\n        \"B\": parseInt(input[3])\n    };\n    return msg;\n}\n\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 670,
+        "y": 150,
+        "wires": [
+            [
+                "943f51c3.16b2b",
+                "dc4a4bf6.ae2848"
+            ]
+        ]
+    },
+    {
+        "id": "3010317a.be1b6e",
+        "type": "mqtt out",
+        "z": "d46de0e5.d6646",
+        "g": "f236866.39cc378",
+        "name": "Cadre",
+        "topic": "domotique/wall/wled/col",
+        "qos": "",
+        "retain": "",
+        "broker": "bb09b041.d6734",
+        "x": 970,
+        "y": 150,
+        "wires": []
+    },
+    {
+        "id": "dc4a4bf6.ae2848",
+        "type": "function",
+        "z": "d46de0e5.d6646",
+        "g": "f236866.39cc378",
+        "name": "Set Color",
+        "func": "function componentToHex(c) {\n  var hex = c.toString(16);\n  return hex.length == 1 ? \"0\" + hex : hex;\n}\n\nfunction rgbToHex(r, g, b) {\n  return \"#\" + componentToHex(r) + componentToHex(g) + componentToHex(b);\n}\n\nmsg.payload =  rgbToHex(msg.payload.R, msg.payload.G, msg.payload.B)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 820,
+        "y": 150,
+        "wires": [
+            [
+                "3010317a.be1b6e"
+            ]
+        ]
+    },
+    {
+        "id": "8b125d1f.fb691",
+        "type": "function",
+        "z": "d46de0e5.d6646",
+        "g": "f236866.39cc378",
+        "name": "Multi LED",
+        "func": "const seg = msg.payload.seg.id;\nlet cmd = Array.from(String(seg), Number);\n\nfor (let index in cmd) {\n  msg.payload.seg.id = cmd[index]-1;\n  node.send(msg);\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 820,
+        "y": 100,
+        "wires": [
+            [
+                "81002cd7.22824"
+            ]
+        ]
+    }
+]
