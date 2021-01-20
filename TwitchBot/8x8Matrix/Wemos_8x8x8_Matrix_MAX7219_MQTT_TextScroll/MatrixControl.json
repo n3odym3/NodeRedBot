@@ -1,0 +1,104 @@
+[
+    {
+        "id": "ccfe48c5.0a5e88",
+        "type": "group",
+        "z": "d46de0e5.d6646",
+        "name": "Matrix 8x8x8",
+        "style": {
+            "stroke": "#000000",
+            "fill": "#ff3f3f",
+            "fill-opacity": "0.41",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "5b5d7d4d.702b24",
+            "9404e807.bb27a8",
+            "6f65cd41.091934"
+        ],
+        "x": 114,
+        "y": 379,
+        "w": 462,
+        "h": 82
+    },
+    {
+        "id": "5b5d7d4d.702b24",
+        "type": "mqtt out",
+        "z": "d46de0e5.d6646",
+        "g": "ccfe48c5.0a5e88",
+        "name": "8x8x4",
+        "topic": "domotique/kallax/8x8x4",
+        "qos": "",
+        "retain": "",
+        "broker": "bb09b041.d6734",
+        "x": 500,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "9404e807.bb27a8",
+        "type": "tmi-event-message",
+        "z": "d46de0e5.d6646",
+        "g": "ccfe48c5.0a5e88",
+        "config": "",
+        "name": "Chat ",
+        "channels_filter": "",
+        "users_filter": "",
+        "action": false,
+        "chat": true,
+        "whisper": false,
+        "regular": true,
+        "mod": true,
+        "subscriber": true,
+        "broadcaster": true,
+        "message_regexp": "",
+        "message_flags": "",
+        "x": 190,
+        "y": 420,
+        "wires": [
+            [
+                "6f65cd41.091934"
+            ]
+        ]
+    },
+    {
+        "id": "6f65cd41.091934",
+        "type": "function",
+        "z": "d46de0e5.d6646",
+        "g": "ccfe48c5.0a5e88",
+        "name": "Username/Msg",
+        "func": "if(msg.payload.userstate[\"msg-id\"]=== \"highlighted-message\" ){\n    msg.payload = remove_accents(msg.payload.message);\n}\nelse{\n    msg.payload= remove_accents(msg.payload.userstate.username);\n}\n\n function remove_accents(strAccents) {\n    strAccents = strAccents.split('');\n    let strAccentsOut = [];\n    let strAccentsLen = strAccents.length;\n    var accents =    \"ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž\";\n    var accentsOut = \"AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz\";\n    for (var y = 0; y < strAccentsLen; y++) {\n        if (accents.indexOf(strAccents[y]) != -1) {\n            strAccentsOut[y] = accentsOut.substr(accents.indexOf(strAccents[y]), 1);\n        } else\n            strAccentsOut[y] = strAccents[y];\n    }\n    strAccentsOut = strAccentsOut.join('');\n\n    return strAccentsOut;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 340,
+        "y": 420,
+        "wires": [
+            [
+                "5b5d7d4d.702b24"
+            ]
+        ]
+    },
+    {
+        "id": "bb09b041.d6734",
+        "type": "mqtt-broker",
+        "name": "Local",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": false,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    }
+]
