@@ -1,0 +1,348 @@
+[
+    {
+        "id": "45339590.1dc17c",
+        "type": "group",
+        "z": "b1554d06.51b42",
+        "name": "Commandes ! ",
+        "style": {
+            "stroke": "#000000",
+            "fill": "#b797cf",
+            "fill-opacity": "0.4",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "236112bc.a112be",
+            "4c1820d6.fae0a",
+            "f92c6d60.be0f4",
+            "2b571c5e.68e874",
+            "51fd9c7a.0f69c4",
+            "2a386746.f3c098",
+            "87c175f9.af8398",
+            "de03de7b.b2e0b"
+        ],
+        "x": 24,
+        "y": 19,
+        "w": 872,
+        "h": 202
+    },
+    {
+        "id": "236112bc.a112be",
+        "type": "tmi-event-message",
+        "z": "b1554d06.51b42",
+        "g": "45339590.1dc17c",
+        "config": "",
+        "name": "Chat ",
+        "channels_filter": "ioodyme",
+        "users_filter": "",
+        "action": false,
+        "chat": true,
+        "whisper": false,
+        "regular": true,
+        "mod": true,
+        "subscriber": true,
+        "broadcaster": true,
+        "message_regexp": "!",
+        "message_flags": "",
+        "x": 100,
+        "y": 120,
+        "wires": [
+            [
+                "51fd9c7a.0f69c4"
+            ]
+        ]
+    },
+    {
+        "id": "4c1820d6.fae0a",
+        "type": "function",
+        "z": "b1554d06.51b42",
+        "g": "45339590.1dc17c",
+        "name": "RS",
+        "func": "msg.payload.message = \"\\\n    Les réseaux sociaux de Neodyme sont : \\\n    youtube.com/NeodymeTV \\\n    twitter.com/tNeodyme \\\n    github.com/n3odym3 \\\n    discord.gg/WnFzwWhvUb \\\n\";\nreturn msg;\n    ",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 650,
+        "y": 100,
+        "wires": [
+            [
+                "f92c6d60.be0f4"
+            ]
+        ]
+    },
+    {
+        "id": "f92c6d60.be0f4",
+        "type": "tmi-command-action",
+        "z": "b1554d06.51b42",
+        "g": "45339590.1dc17c",
+        "config": "",
+        "name": "",
+        "x": 820,
+        "y": 120,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "2b571c5e.68e874",
+        "type": "function",
+        "z": "b1554d06.51b42",
+        "g": "45339590.1dc17c",
+        "name": "Help",
+        "func": "msg.payload.message = \"Les commandes actuellement disponibles sont : [!rs][!alerte][!ok]\"\n\nnode.send(msg);\n\nmsg.payload.message =\"N'oubliez pas de bien dire bonjour/bonsoir à @bot_ioodyme ;) \";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 650,
+        "y": 60,
+        "wires": [
+            [
+                "f92c6d60.be0f4"
+            ]
+        ]
+    },
+    {
+        "id": "51fd9c7a.0f69c4",
+        "type": "function",
+        "z": "b1554d06.51b42",
+        "g": "45339590.1dc17c",
+        "name": "Split CMD + Set Channel",
+        "func": "msg.payload.cmd = msg.payload.message.toLowerCase().split(\" \");\nmsg.payload.username = msg.payload.userstate.username;\nmsg.payload.channel = \"channel\"\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 280,
+        "y": 120,
+        "wires": [
+            [
+                "2a386746.f3c098"
+            ]
+        ]
+    },
+    {
+        "id": "2a386746.f3c098",
+        "type": "switch",
+        "z": "b1554d06.51b42",
+        "g": "45339590.1dc17c",
+        "name": "Switch cmd",
+        "property": "payload.cmd[0]",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "!help",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "!rs",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "!ref",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "!discord",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 4,
+        "x": 480,
+        "y": 120,
+        "wires": [
+            [
+                "2b571c5e.68e874"
+            ],
+            [
+                "4c1820d6.fae0a"
+            ],
+            [
+                "87c175f9.af8398"
+            ],
+            [
+                "de03de7b.b2e0b"
+            ]
+        ]
+    },
+    {
+        "id": "87c175f9.af8398",
+        "type": "function",
+        "z": "b1554d06.51b42",
+        "g": "45339590.1dc17c",
+        "name": "REF",
+        "func": "msg.payload.message = \"Les liens utiles pour ce live sont : \";\n\nmsg.payload.message +=\"REF1 \";\nmsg.payload.message +=\"REF2 \";\nmsg.payload.message +=\"REF3 \";\nmsg.payload.message +=\"REF4 \";\nmsg.payload.message +=\"... \";\n\nreturn msg;\n\n\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 650,
+        "y": 140,
+        "wires": [
+            [
+                "f92c6d60.be0f4"
+            ]
+        ]
+    },
+    {
+        "id": "de03de7b.b2e0b",
+        "type": "function",
+        "z": "b1554d06.51b42",
+        "g": "45339590.1dc17c",
+        "name": "!discord",
+        "func": "msg.payload.message = \"Le lien du discord est :  LIEN\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 660,
+        "y": 180,
+        "wires": [
+            [
+                "f92c6d60.be0f4"
+            ]
+        ]
+    },
+    {
+        "id": "dbfb96d0.50b4f8",
+        "type": "group",
+        "z": "b1554d06.51b42",
+        "name": "Hello Viewer",
+        "style": {
+            "stroke": "#000000",
+            "stroke-opacity": "0.87",
+            "fill": "#9363b7",
+            "fill-opacity": "0.39",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "2632e5a5.99687a",
+            "a63822b8.3c263",
+            "89df6e14.21f2e",
+            "c749edd1.96235",
+            "511a898.0906a78",
+            "5bd43133.bc568"
+        ],
+        "x": 24,
+        "y": 239,
+        "w": 962,
+        "h": 82
+    },
+    {
+        "id": "2632e5a5.99687a",
+        "type": "tmi-event-raw_message",
+        "z": "b1554d06.51b42",
+        "g": "dbfb96d0.50b4f8",
+        "config": "",
+        "name": "",
+        "x": 130,
+        "y": 280,
+        "wires": [
+            [
+                "a63822b8.3c263"
+            ]
+        ]
+    },
+    {
+        "id": "a63822b8.3c263",
+        "type": "function",
+        "z": "b1554d06.51b42",
+        "g": "dbfb96d0.50b4f8",
+        "name": "Bienvenue",
+        "func": "const input = msg.payload;\n\nif(input.message.command === \"JOIN\"){\n    let username = input.message.prefix.split(\"!\")[0];\n    flow.set('UsernameToTest', username);\n    return msg;\n}\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 300,
+        "y": 280,
+        "wires": [
+            [
+                "c749edd1.96235"
+            ]
+        ]
+    },
+    {
+        "id": "89df6e14.21f2e",
+        "type": "tmi-command-action",
+        "z": "b1554d06.51b42",
+        "g": "dbfb96d0.50b4f8",
+        "config": "",
+        "name": "",
+        "x": 910,
+        "y": 280,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "c749edd1.96235",
+        "type": "http request",
+        "z": "b1554d06.51b42",
+        "g": "dbfb96d0.50b4f8",
+        "name": "Test Bot",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://api.twitchinsights.net/v1/bots/online",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 460,
+        "y": 280,
+        "wires": [
+            [
+                "511a898.0906a78"
+            ]
+        ]
+    },
+    {
+        "id": "511a898.0906a78",
+        "type": "function",
+        "z": "b1554d06.51b42",
+        "g": "dbfb96d0.50b4f8",
+        "name": "Bot ?",
+        "func": "const username =flow.get('UsernameToTest');\nconst input = msg.payload;\n\nif(!input.includes(username)){\n    msg = {\n        \"payload\":{\n            \"channel\":\"channel\",\n            \"message\": \"Bienvenue @\" + username + \" ! :D\",\n            \"username\": username\n        }\n    }\n    return msg; \n}\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 610,
+        "y": 280,
+        "wires": [
+            [
+                "5bd43133.bc568"
+            ]
+        ]
+    },
+    {
+        "id": "5bd43133.bc568",
+        "type": "function",
+        "z": "b1554d06.51b42",
+        "g": "dbfb96d0.50b4f8",
+        "name": "Antispam",
+        "func": "let Antispam_list = global.get('Antispam_Hello')||{};\nconst username = msg.payload.username;\nconst timestamp = Date.now();\nconst debounce =  (24 * 60 * 60 * 1000);\n\nif(username in Antispam_list){\n    if( timestamp - Antispam_list[username] > debounce){\n        Antispam_list[username]=timestamp;\n        global.set('Antispam_Hello', Antispam_list);\n    }\n    else{\n        return;\n    }\n}\nelse{\n    Antispam_list[username]=timestamp;\n    global.set('Antispam_Hello', Antispam_list);\n}\n\nreturn msg;  ",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 750,
+        "y": 280,
+        "wires": [
+            [
+                "89df6e14.21f2e"
+            ]
+        ]
+    }
+]
